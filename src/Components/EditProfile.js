@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Platform, Image, TouchableWithoutFeedback } from 'react-native'
 import { Header, ListItem, Button, Input, Overlay } from 'react-native-elements'
 import { connect } from 'react-redux'
-import { usernameEditProfileChanged, modalShowing, modalClosing, imageEditProfileChanged } from '../Actions'
+import { usernameEditProfileChanged, modalShowing, modalClosing, imageEditProfileChanged, saveUpdateProfile } from '../Actions'
 import ImagePicker from 'react-native-image-crop-picker';
 
 class EditProfile extends Component {
@@ -33,7 +33,20 @@ class EditProfile extends Component {
         });
     }
     onIconSavePress = () => {
+        if(this.props.oldPhoto !== this.props.profileImage){
+            this.props.saveUpdateProfile(this.props.username, this.props.profileImage)
+        }else{
+            this.props.saveUpdateProfile(
+                this.props.username,
+                null
+            )
+        }
+    }
 
+    componentDidUpdate(){
+        if(this.props.profileUpdated){
+            this.props.navigation.goBack()
+        }
     }
 
     render() { 
@@ -166,8 +179,15 @@ const MapStateToProps = ({ editProfile, auth }) => {
         error: editProfile.error,
         loading: editProfile.loading,
         modalShow: editProfile.modalShow,
-        userId: auth.user.user.id
+        oldPhoto: auth.user.user.photoURL,
+        profileUpdated: editProfile.profileUpdated
     }
 }
 
-export default connect(MapStateToProps, { usernameEditProfileChanged, modalShowing, modalClosing, imageEditProfileChanged })(EditProfile);
+export default connect(MapStateToProps, { 
+    usernameEditProfileChanged, 
+    modalShowing, 
+    modalClosing, 
+    imageEditProfileChanged, 
+    saveUpdateProfile 
+})(EditProfile);

@@ -14,7 +14,8 @@ const INITIAL_STATE = {
     username: '',
     modalShow: false,
     loading: false,
-    error: ''
+    error: '',
+    profileUpdated: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -30,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
         case EDIT_PROFILE_FAIL : 
             return { ...state, error: action.payload, loading: false}
         case EDIT_PROFILE_SUCCESS : 
-            return { ...INITIAL_STATE, loading: false }
+            return { ...INITIAL_STATE, loading: false, profileUpdated: true }
         case MODAL_SHOW : 
             return { ...state, modalShow: true}
         case MODAL_SHOW : 
